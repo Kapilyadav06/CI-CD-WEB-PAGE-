@@ -1,3 +1,4 @@
+# Use the official CentOS base image
 FROM centos:latest
 MAINTAINER choudharysirvi1212@gmail.com
 
