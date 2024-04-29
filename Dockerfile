@@ -1,33 +1,17 @@
-# Use the CentOS base image
 FROM centos:latest
+MAINTAINER choudharysirvi1212@gmail.com
 
-# Update the CentOS repository and install necessary packages
-RUN dnf install -y epel-release && \
-    dnf install -y https://repo.ius.io/ius-release-el8.rpm && \
-    dnf update -y && \
-    dnf install -y \
-    git \
-    curl \
-    wget \
-    unzip \
-    python3 \
-    python3-pip \
-    gcc \
-    make \
-    && dnf clean all
+# Update CentOS repositories to version 8 and configure YUM repositories
+RUN sed -i 's/$releasever/8/g' /etc/yum.repos.d/CentOS-Base.repo && \
+    sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Base.repo && \
+    sed -i 's/#baseurl/baseurl/g' /etc/yum.repos.d/CentOS-Base.repo && \
+    sed -i 's/mirror.centos.org/mirrors.aliyun.com/g' /etc/yum.repos.d/CentOS-Base.repo
 
+# Install Apache HTTP Server and Git
+RUN yum install httpd git -y
 
-# Install additional packages if needed
-# RUN dnf install -y <package_name>
+# Clone the Git repository into the Apache document root
+RUN git clone https://github.com/praveensirvi1212/webdev /var/www/html
 
 # Set the working directory
-WORKDIR /app
-
-# Copy the application files
-COPY . /app
-
-# Expose any necessary ports
-# EXPOSE <port_number>
-
-# Define the command to run the application
-# CMD ["<command>", "<arguments>"]
+WORKDIR /var/www/html
